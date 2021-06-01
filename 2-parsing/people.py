@@ -27,8 +27,8 @@ def read_input(filename: str) -> list:
             records.extend(line.split())
         else:
             for record in records:
-                key, value = record.split(':')
-                passport[key] = value
+                key, password_value = record.split(':')
+                passport[key] = password_value
             passports.append(passport)
             passport, records = {}, []
 
@@ -57,58 +57,57 @@ def verify_passports(input_passports):
 
 
 def byr(year):
-    if 1920 <= int(year) <= 2002 and year.isnumeric():
-        return True
-    else:
-        return False
+    min_year = 1920
+    max_year = 2002
+    return bool(min_year <= int(year) <= max_year and year.isnumeric())
 
 
 def iyr(year):
-    if 2010 <= int(year) <= 2020 and year.isnumeric():
-        return True
-    else:
-        return False
+    min_year = 2010
+    max_year = 2020
+    return bool(min_year <= int(year) <= max_year and year.isnumeric())
 
 
 def eyr(year):
-    if 2020 <= int(year) <= 2030 and year.isnumeric():
-        return True
-    else:
-        return False
+    min_year = 2020
+    max_year = 2030
+    return bool(min_year <= int(year) <= max_year and year.isnumeric())
 
 
 def hgt(height):
-    if height[-2:] == 'in' and 59 <= int(height[:-2]) <= 76:
-        return True
-    elif height[-2:] == 'cm' and 150 <= int(height[:-2]) <= 193:
-        return True
-    else:
+    unit = height[-2:]
+    try:
+        int_height = int(height[:-2])
+    except ValueError:
         return False
+
+    if unit == 'in':
+        min_height = 59
+        max_height = 76
+    elif unit == 'cm':
+        min_height = 150
+        max_height = 193
+    else:
+        min_height = 0
+        max_height = 0
+
+    return bool(min_height <= int_height <= max_height)
 
 
 def hcl(color):
-    if re.search(r'[#][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]', color):
-        return True
-    else:
-        return False
+    return bool(re.search('[#][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]', color))
 
 
 def ecl(color):
     valid_colors = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
-    if color in valid_colors:
-        return True
-    else:
-        return False
+    return bool(color in valid_colors)
 
 
 def pid(input_number):
-    if re.search(r'^[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]$', input_number):
-        return True
-    else:
-        return False
+    return bool(re.search('^[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]$', input_number))
 
 
-def check_passports(passports, locals):
+def check_passports(passports, input_locals):
     output_passwords = []
     number_of_valids = 0
     for passport in passports:
@@ -116,10 +115,10 @@ def check_passports(passports, locals):
         number_fields = len(passport.keys())
         for key in passport.keys():
 
-            if key != 'cid':
-                status &= locals[key](passport[key])
-            else:
+            if key == 'cid':
                 number_fields -= 1
+            else:
+                status &= input_locals[key](passport[key])
 
         if status and number_fields == 7:
             output_passwords.append('VALID')
@@ -134,4 +133,4 @@ verified_passports, number = verify_passports(passports)
 print(number)
 
 passport_statuses, number_of_valid = check_passports(passports, locals())
-pass
+print(number_of_valid)
