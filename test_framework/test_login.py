@@ -1,5 +1,6 @@
 import pytest
 import requests
+from hamcrest import *
 
 URL = 'https://reqres.in/api/login'
 RESPONSE_OK = 200
@@ -8,8 +9,11 @@ RESPONSE_NOK = 400
 
 @pytest.mark.parametrize('body', [{'email': 'eve.holt@reqres.in', 'password': 'cityslicka'}])
 def test_login_ok(body):
-    assert requests.post(URL, json=body).status_code == RESPONSE_OK
-    assert requests.post(URL, json=body).json()['token']
+    # assert requests.post(URL, json=body).status_code == RESPONSE_OK
+    assert_that(requests.post(URL, json=body).status_code, equal_to(RESPONSE_OK))
+
+    # assert requests.post(URL, json=body).json()['token']
+    assert_that(requests.post(URL, json=body).json(), has_key('token'))
 
 
 @pytest.mark.parametrize('body', [{'email': 'eve.holt@reqres.in', 'password': 'abecece'},

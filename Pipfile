@@ -10,6 +10,7 @@ wemake-python-styleguide = "*"
 requests = "*"
 pytest = "*"
 pytest-xdist = "*"
+pyhamcrest = "*"
 
 [dev-packages]
 
