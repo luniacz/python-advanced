@@ -1,6 +1,6 @@
 import pytest
 import requests
-from hamcrest import *
+from hamcrest import assert_that, equal_to, has_key
 
 URL = 'https://reqres.in/api/login'
 RESPONSE_OK = 200
