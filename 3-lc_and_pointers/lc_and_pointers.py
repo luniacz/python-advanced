@@ -1,4 +1,5 @@
 import os
+import logging
 
 
 def read_input(filename):
@@ -27,6 +28,8 @@ def count_trees(input_matrix):
     return counter
 
 
+format = '%(asctime)s: %(message)s'
+logging.basicConfig(format=format, level=logging.DEBUG, datefmt='%H:%M:%S')
 matrix_input = read_input('input.txt')
 number_of_tries = count_trees(matrix_input)
-print(number_of_tries)
+logging.info(f'Total number of trees : {number_of_tries}')
